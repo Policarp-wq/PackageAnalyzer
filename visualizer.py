@@ -48,8 +48,8 @@ def extract_dependencies(dependency_text):
 def get_dependencies(repo, package, dict):
     if package in dict:
         return dict[package]
-
-    url = f'{repo}{package[:4] if 'lib' in package else package[0]}/{package}/'
+    trimed = trim_package(package)
+    url = f'{repo}{trimed[:4] if 'lib' in package else trimed[0]}/{trimed}/'
     # request exml http://archive.ubuntu.com/ubuntu/ubuntu/pool/universe/n/nanoblogger/
     desc_url = get_package_meta_url(url)
     if desc_url is None:
@@ -60,7 +60,7 @@ def get_dependencies(repo, package, dict):
     dependencies = extract_dependencies(get_dependency_text(response.text))
     dict[package] = dependencies
     for dep in dependencies:
-        dict[dep] = get_dependencies(repo, trim_package(dep), dict)
+        dict[dep] = get_dependencies(repo, dep, dict)
     return dependencies
 
 
@@ -106,7 +106,7 @@ def main():
     # package = "obsession"
     # package = "i2p"
     # package = "qatengine"
-    # package = "ubweweelt"
+    # package = "laby"
     # repo = "http://archive.ubuntu.com/ubuntu/ubuntu/pool/universe/"
 
     print(f'Visualization started with params:\npath: {path}\npackage: {package}\nrepo: {repo}\n')
